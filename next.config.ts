@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  env: {
+    // This makes the API key available on the client-side, prefixed with NEXT_PUBLIC_
+    // The actual key should be in .env.local
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  }
 };
 
 export default nextConfig;
