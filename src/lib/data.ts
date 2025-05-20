@@ -11,6 +11,15 @@ export const sampleStops: Stop[] = [
   { id: 'stop6', name: 'Fatehpur Sikri', latitude: 27.0911, longitude: 77.6639 },
   { id: 'stop7', name: 'Alwar Bus Stand', latitude: 27.5570, longitude: 76.6179 },
   { id: 'stop8', name: 'Gurugram Rajiv Chowk', latitude: 28.4595, longitude: 77.0266 },
+  // Uttar Pradesh Stops
+  { id: 'stop9', name: 'Lucknow Charbagh Bus Stand', latitude: 26.8467, longitude: 80.9462 },
+  { id: 'stop10', name: 'Kanpur Jhakarkati Bus Stand', latitude: 26.4499, longitude: 80.3319 },
+  { id: 'stop11', name: 'Varanasi Cantt Bus Stand', latitude: 25.3176, longitude: 82.9739 },
+  { id: 'stop12', name: 'Akbarpur Bus Stand', latitude: 26.4325, longitude: 82.5377 }, // Ambedkar Nagar
+  { id: 'stop13', name: 'Sultanpur Bus Stand', latitude: 26.2619, longitude: 82.0730 },
+  { id: 'stop14', name: 'Ayodhya Dham Bus Station', latitude: 26.7906, longitude: 82.1983 },
+  { id: 'stop15', name: 'Barabanki Bus Stand', latitude: 26.9394, longitude: 81.1932 },
+  { id: 'stop16', name: 'Prayagraj Civil Lines Bus Stand', latitude: 25.4448, longitude: 81.8405 },
 ];
 
 export const sampleRoutes: Route[] = [
@@ -20,13 +29,13 @@ export const sampleRoutes: Route[] = [
     operatorName: 'Singh Travels',
     busType: 'AC Seater 2+2',
     stops: [sampleStops[0], sampleStops[4], sampleStops[1], sampleStops[2]], // Delhi -> Vrindavan -> Mathura -> Agra
-    path: [ /* Path data as before */
+    path: [ 
       { lat: sampleStops[0].latitude, lng: sampleStops[0].longitude }, { lat: 28.1000, lng: 77.4500 },
       { lat: sampleStops[4].latitude, lng: sampleStops[4].longitude }, { lat: 27.5000, lng: 77.6600 },
       { lat: sampleStops[1].latitude, lng: sampleStops[1].longitude }, { lat: 27.3300, lng: 77.8300 },
       { lat: sampleStops[2].latitude, lng: sampleStops[2].longitude },
     ],
-    departureTime: '07:00', // 24-hour format for easier parsing
+    departureTime: '07:00', 
     averageDurationHours: 5.5,
     distanceKm: 230,
   },
@@ -36,7 +45,7 @@ export const sampleRoutes: Route[] = [
     operatorName: 'Rajputana Tours',
     busType: 'Non-AC Seater 2+3',
     stops: [sampleStops[3], sampleStops[5], sampleStops[2]], // Jaipur -> Fatehpur Sikri -> Agra
-    path: [ /* Path data as before */
+    path: [ 
       { lat: sampleStops[3].latitude, lng: sampleStops[3].longitude }, { lat: 27.0000, lng: 76.7000 },
       { lat: sampleStops[5].latitude, lng: sampleStops[5].longitude }, { lat: 27.1500, lng: 77.8000 },
       { lat: sampleStops[2].latitude, lng: sampleStops[2].longitude },
@@ -51,7 +60,7 @@ export const sampleRoutes: Route[] = [
     operatorName: 'Maharaja Express',
     busType: 'AC Sleeper 2+1',
     stops: [sampleStops[0], sampleStops[7], sampleStops[6], sampleStops[3]], // Delhi -> Gurugram -> Alwar -> Jaipur
-    path: [ /* Path data as before */
+    path: [ 
       { lat: sampleStops[0].latitude, lng: sampleStops[0].longitude }, { lat: sampleStops[7].latitude, lng: sampleStops[7].longitude }, 
       { lat: 28.000, lng: 76.8000 }, { lat: sampleStops[6].latitude, lng: sampleStops[6].longitude },
       { lat: 27.2000, lng: 76.0000 }, { lat: sampleStops[3].latitude, lng: sampleStops[3].longitude },
@@ -106,10 +115,88 @@ export const sampleRoutes: Route[] = [
     departureTime: '11:00',
     averageDurationHours: 4,
     distanceKm: 180,
+  },
+  // New UP Routes
+  {
+    id: 'routeUP1',
+    name: 'Route 501: Delhi - Lucknow Superfast',
+    operatorName: 'UPSRTC Gold Line',
+    busType: 'AC Janrath 2+2',
+    stops: [sampleStops[0], sampleStops[8]], // Delhi -> Lucknow
+    path: [
+      { lat: sampleStops[0].latitude, lng: sampleStops[0].longitude }, // Delhi
+      { lat: 27.75, lng: 79.00 }, // Midpoint approx
+      { lat: sampleStops[8].latitude, lng: sampleStops[8].longitude }, // Lucknow
+    ],
+    departureTime: '08:00',
+    averageDurationHours: 8,
+    distanceKm: 500,
+  },
+  {
+    id: 'routeUP2',
+    name: 'Route 601: Kanpur - Varanasi Express',
+    operatorName: 'Kashi Vishwanath Express',
+    busType: 'Non-AC Seater 2+3',
+    stops: [sampleStops[9], sampleStops[15], sampleStops[10]], // Kanpur -> Prayagraj -> Varanasi
+    path: [
+      { lat: sampleStops[9].latitude, lng: sampleStops[9].longitude }, // Kanpur
+      { lat: sampleStops[15].latitude, lng: sampleStops[15].longitude }, // Prayagraj
+      { lat: sampleStops[10].latitude, lng: sampleStops[10].longitude }, // Varanasi
+    ],
+    departureTime: '10:00',
+    averageDurationHours: 7,
+    distanceKm: 330,
+  },
+  {
+    id: 'routeUP3',
+    name: 'Route 701: Delhi - Ayodhya Ram Rath',
+    operatorName: 'Ram Rajya Travels',
+    busType: 'AC Sleeper 2+1',
+    stops: [sampleStops[0], sampleStops[8], sampleStops[14], sampleStops[13]], // Delhi -> Lucknow -> Barabanki -> Ayodhya
+    path: [
+      { lat: sampleStops[0].latitude, lng: sampleStops[0].longitude }, // Delhi
+      { lat: sampleStops[8].latitude, lng: sampleStops[8].longitude }, // Lucknow
+      { lat: sampleStops[14].latitude, lng: sampleStops[14].longitude }, // Barabanki
+      { lat: sampleStops[13].latitude, lng: sampleStops[13].longitude }, // Ayodhya
+    ],
+    departureTime: '20:00',
+    averageDurationHours: 10,
+    distanceKm: 680,
+  },
+  {
+    id: 'routeUP4',
+    name: 'Route 801: Lucknow - Varanasi (via Sultanpur, Akbarpur)',
+    operatorName: 'Awadh Express Services',
+    busType: 'AC Seater 2+2',
+    stops: [sampleStops[8], sampleStops[12], sampleStops[11], sampleStops[10]], // Lucknow -> Sultanpur -> Akbarpur -> Varanasi
+    path: [
+      { lat: sampleStops[8].latitude, lng: sampleStops[8].longitude }, // Lucknow
+      { lat: sampleStops[12].latitude, lng: sampleStops[12].longitude }, // Sultanpur
+      { lat: sampleStops[11].latitude, lng: sampleStops[11].longitude }, // Akbarpur
+      { lat: sampleStops[10].latitude, lng: sampleStops[10].longitude }, // Varanasi
+    ],
+    departureTime: '09:00',
+    averageDurationHours: 6.5,
+    distanceKm: 300,
+  },
+  {
+    id: 'routeUP5',
+    name: 'Route 502: Delhi - Lucknow Volvo',
+    operatorName: 'Sharma Travels',
+    busType: 'Volvo AC Semi-Sleeper',
+    stops: [sampleStops[0], sampleStops[8]], // Delhi -> Lucknow
+    path: [
+        { lat: sampleStops[0].latitude, lng: sampleStops[0].longitude }, 
+        { lat: 27.78, lng: 79.03 }, 
+        { lat: sampleStops[8].latitude, lng: sampleStops[8].longitude },
+    ],
+    departureTime: '21:30',
+    averageDurationHours: 7.5,
+    distanceKm: 500,
   }
 ];
 
-export let sampleBuses: Bus[] = [ // Changed to let for seat updates
+export let sampleBuses: Bus[] = [ 
   {
     id: 'busDL01AG1234',
     routeId: 'route1',
@@ -130,26 +217,57 @@ export let sampleBuses: Bus[] = [ // Changed to let for seat updates
   },
   {
     id: 'busUP85AG2233',
-    routeId: 'route4', // Was route1, changed to route4
+    routeId: 'route4', 
     currentLatitude: 27.2500, currentLongitude: 77.9000,
     totalSeats: 42, bookedSeats: 35, etaPredictions: new Map(),
   },
   {
     id: 'busHR55JP0001',
     routeId: 'route5',
-    currentLatitude: 28.5000, currentLongitude: 77.1000, // Near Delhi
+    currentLatitude: 28.5000, currentLongitude: 77.1000, 
     totalSeats: 55, bookedSeats: 10, etaPredictions: new Map(),
   },
    {
     id: 'busUP80MJ0002',
     routeId: 'route6',
-    currentLatitude: 27.5100, currentLongitude: 77.5000, // Near Mathura
+    currentLatitude: 27.5100, currentLongitude: 77.5000, 
     totalSeats: 35, bookedSeats: 5, etaPredictions: new Map(),
   },
    {
     id: 'busDL01AG7777',
-    routeId: 'route1', // Another bus on route1
-    currentLatitude: 28.6000, currentLongitude: 77.2000, // Near Delhi
+    routeId: 'route1', 
+    currentLatitude: 28.6000, currentLongitude: 77.2000, 
     totalSeats: 45, bookedSeats: 5, etaPredictions: new Map(),
+  },
+  // New Buses for UP Routes
+  {
+    id: 'busUP32LK0011',
+    routeId: 'routeUP1', // Delhi - Lucknow
+    currentLatitude: 28.05, currentLongitude: 78.50, // Somewhere on the way from Delhi
+    totalSeats: 40, bookedSeats: 10, etaPredictions: new Map(),
+  },
+  {
+    id: 'busUP78KV0022',
+    routeId: 'routeUP2', // Kanpur - Varanasi
+    currentLatitude: 25.90, currentLongitude: 81.50, // Somewhere on the way from Kanpur
+    totalSeats: 50, bookedSeats: 25, etaPredictions: new Map(),
+  },
+  {
+    id: 'busDL01AY0033',
+    routeId: 'routeUP3', // Delhi - Ayodhya
+    currentLatitude: 27.00, currentLongitude: 80.00, // Somewhere after Lucknow
+    totalSeats: 30, bookedSeats: 12, etaPredictions: new Map(),
+  },
+  {
+    id: 'busUP32VB0044',
+    routeId: 'routeUP4', // Lucknow - Varanasi (regional)
+    currentLatitude: 26.30, currentLongitude: 82.20, // Near Sultanpur
+    totalSeats: 40, bookedSeats: 18, etaPredictions: new Map(),
+  },
+  {
+    id: 'busDL01LK5500',
+    routeId: 'routeUP5', // Delhi - Lucknow Volvo
+    currentLatitude: 28.55, currentLongitude: 77.35, // Near Delhi/Noida
+    totalSeats: 48, bookedSeats: 22, etaPredictions: new Map(),
   }
 ];
