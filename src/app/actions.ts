@@ -1,3 +1,4 @@
+
 // src/app/actions.ts
 "use server";
 
@@ -33,8 +34,8 @@ export async function getEtaPredictionAction(
       stopId,
       currentLatitude,
       currentLongitude,
-      historicalData: mockHistoricalData, // Replace with actual data source if available
-      trafficConditions: mockTrafficConditions, // Replace with actual data source if available
+      historicalData: mockHistoricalData, 
+      trafficConditions: mockTrafficConditions, 
     };
     const prediction = await predictETA(input);
     return prediction;
@@ -46,10 +47,11 @@ export async function getEtaPredictionAction(
 
 export async function bookTicketAction(
   busId: string,
-  numSeats: number
+  numSeats: number,
+  passengerName: string, // Added passengerName
+  gender: string // Added gender (type can be more specific if needed)
 ): Promise<{ success: boolean; message: string; updatedBus?: Bus }> {
   // Simulate booking logic
-  // In a real app, this would interact with a database using transactions.
   const busIndex = sampleBuses.findIndex(b => b.id === busId);
   if (busIndex === -1) {
     return { success: false, message: "Bus not found." };
@@ -67,16 +69,16 @@ export async function bookTicketAction(
   }
 
   // Simulate successful booking by updating mock data
-  // NOTE: This is NOT how you'd do it in a real multi-user app. This is for demo purposes.
-  // A real app needs a proper database and transactional updates.
   sampleBuses[busIndex].bookedSeats += numSeats;
   
   // Simulate some delay
   await new Promise(resolve => setTimeout(resolve, 500));
 
+  // In a real app, seat numbers would be assigned and stored.
+  // Here, we're just confirming the number of seats.
   return { 
     success: true, 
-    message: `Successfully booked ${numSeats} seat(s) on bus ${busId}.`,
-    updatedBus: { ...sampleBuses[busIndex] } // Return the updated bus state
+    message: `Ticket confirmation for ${passengerName}. ${numSeats} seat(s) on bus ${busId}.`,
+    updatedBus: { ...sampleBuses[busIndex] } 
   };
 }
