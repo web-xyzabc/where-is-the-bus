@@ -20,7 +20,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast";
+// Removed useToast as submission is handled by parent
 
 const searchSchema = z.object({
   from: z.string().min(1, "Source is required"),
@@ -29,13 +29,17 @@ const searchSchema = z.object({
   bookingForWomen: z.boolean().default(false),
 });
 
-type SearchFormData = z.infer<typeof searchSchema>;
+export type SearchFormData = z.infer<typeof searchSchema>;
 
-export function BusSearchForm() {
+interface BusSearchFormProps {
+  onSearch: (data: SearchFormData) => void;
+  isSearching?: boolean;
+}
+
+export function BusSearchForm({ onSearch, isSearching }: BusSearchFormProps) {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const { toast } = useToast();
 
-  const { control, register, handleSubmit, setValue, formState: { errors } } = useForm<SearchFormData>({
+  const { control, register, handleSubmit, setValue, formState: { errors }, watch } = useForm<SearchFormData>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
       from: "",
@@ -44,14 +48,18 @@ export function BusSearchForm() {
       bookingForWomen: false,
     },
   });
+  
+  const fromValue = watch("from");
+  const toValue = watch("to");
+
+  const handleSwapLocations = () => {
+    setValue("from", toValue);
+    setValue("to", fromValue);
+  };
+
 
   const onSubmit = (data: SearchFormData) => {
-    console.log("Search Data:", data);
-    toast({
-      title: "Search Submitted",
-      description: `Searching buses from ${data.from} to ${data.to} on ${format(data.dateOfJourney, "PPP")}.`,
-    });
-    // Here you would typically call an API to search for buses
+    onSearch(data);
   };
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
@@ -62,10 +70,12 @@ export function BusSearchForm() {
   };
   
   const setJourneyDate = (offset: number) => {
-    const newDate = new Date();
-    newDate.setDate(newDate.getDate() + offset);
-    handleDateSelect(newDate);
+    const newDate = new Date(); // Base today
+    const journeyDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()); // only date part
+    journeyDate.setDate(journeyDate.getDate() + offset);
+    handleDateSelect(journeyDate);
   };
+
 
   return (
     <Card className="max-w-4xl mx-auto shadow-2xl">
@@ -82,14 +92,23 @@ export function BusSearchForm() {
                   placeholder="Source"
                   className="pl-10"
                   {...register("from")}
+                  disabled={isSearching}
                 />
               </div>
               {errors.from && <p className="text-xs text-red-500 mt-1">{errors.from.message}</p>}
             </div>
             
-            {/* Swap Button - visible on larger screens */}
-            <div className="hidden md:flex md:col-span-1 items-center justify-center pt-6">
-                <Button variant="ghost" size="icon" type="button" onClick={() => {/* Implement swap logic if needed */}}>
+            {/* Swap Button */}
+            <div className="flex md:col-span-1 items-center justify-center pt-6 md:pt-0">
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    type="button" 
+                    onClick={handleSwapLocations} 
+                    aria-label="Swap locations"
+                    disabled={isSearching}
+                    className="mt-0 md:mt-5" // Adjust margin for mobile vs desktop alignment
+                >
                     <ArrowRightLeft className="h-5 w-5 text-gray-500" />
                 </Button>
             </div>
@@ -104,6 +123,7 @@ export function BusSearchForm() {
                   placeholder="Destination"
                   className="pl-10"
                   {...register("to")}
+                  disabled={isSearching}
                 />
               </div>
               {errors.to && <p className="text-xs text-red-500 mt-1">{errors.to.message}</p>}
@@ -124,6 +144,7 @@ export function BusSearchForm() {
                           "w-full justify-start text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
+                        disabled={isSearching}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
@@ -168,14 +189,15 @@ export function BusSearchForm() {
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       className="data-[state=checked]:bg-rose-500 data-[state=unchecked]:bg-gray-200"
+                      disabled={isSearching}
                     />
                   </div>
                 )}
               />
             </div>
             
-            <Button type="submit" className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-3">
-              <Search className="mr-2 h-5 w-5" /> Search Buses
+            <Button type="submit" className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-lg px-8 py-3" disabled={isSearching}>
+              <Search className="mr-2 h-5 w-5" /> {isSearching ? "Searching..." : "Search Buses"}
             </Button>
           </div>
         </form>

@@ -2,9 +2,14 @@
 "use client";
 
 import Image from "next/image";
-import { BusSearchForm } from "./BusSearchForm";
+import { BusSearchForm, type SearchFormData } from "./BusSearchForm";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  onSearch: (data: SearchFormData) => void;
+  isSearching?: boolean;
+}
+
+export function HeroSection({ onSearch, isSearching }: HeroSectionProps) {
   return (
     <section className="relative bg-gradient-to-r from-primary/80 to-accent/60 text-white py-16 md:py-24">
       <Image
@@ -14,6 +19,7 @@ export function HeroSection() {
         objectFit="cover"
         className="absolute inset-0 z-0 opacity-30"
         data-ai-hint="scenic road landscape"
+        priority // Added priority for LCP
       />
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-8 md:mb-12">
@@ -24,7 +30,7 @@ export function HeroSection() {
             Find and book your bus tickets with ease.
           </p>
         </div>
-        <BusSearchForm />
+        <BusSearchForm onSearch={onSearch} isSearching={isSearching} />
       </div>
     </section>
   );

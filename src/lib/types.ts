@@ -1,3 +1,4 @@
+
 export interface Stop {
   id: string;
   name: string;
@@ -8,9 +9,14 @@ export interface Stop {
 export interface Route {
   id: string;
   name: string;
+  operatorName: string;
+  busType: string; // e.g., "AC Sleeper", "Non-AC Seater"
   stops: Stop[];
   // Path for drawing the route on the map
   path: { lat: number; lng: number }[];
+  departureTime: string; // e.g., "08:00 AM" (for the first stop)
+  averageDurationHours: number; // Average duration for the whole route
+  distanceKm: number; // Total distance of the route in KM
 }
 
 export interface Bus {
@@ -37,4 +43,21 @@ export interface Booking {
   stopId: string; // Or perhaps origin/destination stops
   numSeats: number;
   bookingTime: string; // ISO string
+}
+
+export interface BusSearchResult {
+  busId: string;
+  routeId: string;
+  operatorName: string;
+  busType: string;
+  routeName: string;
+  departureStopName: string;
+  arrivalStopName: string;
+  departureDateTime: string; // ISO string for full departure date and time
+  estimatedArrivalDateTime: string; // ISO string for full arrival date and time
+  price: number;
+  availableSeats: number;
+  totalSeats: number;
+  distanceKm: number;
+  averageDurationHours: number;
 }
