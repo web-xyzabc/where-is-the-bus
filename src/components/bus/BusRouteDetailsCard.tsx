@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Bus, Route, Stop, EtaPrediction } from '@/lib/types';
@@ -58,8 +59,10 @@ export function BusRouteDetailsCard({ bus, route, selectedStopId, onStopSelect, 
   return (
     <Card className="w-full max-w-md shadow-xl flex flex-col">
       <CardHeader className="bg-primary text-primary-foreground p-4 rounded-t-lg">
-        <CardTitle className="text-xl">{route.name}</CardTitle>
-        <CardDescription className="text-primary-foreground/80">Bus ID: {bus.id}</CardDescription>
+        <CardTitle className="text-xl">{route.operatorName}</CardTitle>
+        <CardDescription className="text-primary-foreground/80">
+          {route.name} ({route.busType}) - Bus ID: {bus.id}
+        </CardDescription>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <div className="flex justify-between items-center mb-3">
