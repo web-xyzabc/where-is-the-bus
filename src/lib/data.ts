@@ -22,6 +22,110 @@ export const sampleStops: Stop[] = [
   { id: 'stop16', name: 'Prayagraj Civil Lines Bus Stand', latitude: 25.4448, longitude: 81.8405 },
 ];
 
+// Helper function for rough distance calculation (Haversine formula)
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Radius of the earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return Math.round(distance);
+}
+
+const operatorNamesPool = ["Bharat Benz Connect", "Volvo Cruisers", "State Express", "Rapid Transways", "Comfort Journey Ltd.", "Skyline Travels", "UPSRTC Deluxe", "Rajasthan State Roadways"];
+const busTypesPool = ["AC Sleeper 2+1", "Volvo AC Semi-Sleeper", "AC Seater 2+2", "Non-AC Deluxe 2+2", "AC Janrath 2+2", "Ordinary Express"];
+
+let routeCounter = 20; // Start route IDs from a higher number to avoid collision with existing
+let busCounter = 20;
+
+
+const newGeneratedRoutes: Route[] = [];
+const newGeneratedBuses: Bus[] = [];
+
+const cityPairsToConnect: [Stop, Stop, string][] = [
+  // Delhi connections
+  [sampleStops[0], sampleStops[9], "07:30"], // Delhi -> Lucknow
+  [sampleStops[0], sampleStops[10], "09:00"], // Delhi -> Kanpur
+  [sampleStops[0], sampleStops[11], "10:30"], // Delhi -> Varanasi
+  [sampleStops[0], sampleStops[13], "06:00"], // Delhi -> Ayodhya
+  [sampleStops[0], sampleStops[15], "11:00"], // Delhi -> Prayagraj
+
+  // Lucknow connections
+  [sampleStops[8], sampleStops[2], "08:15"],  // Lucknow -> Agra
+  [sampleStops[8], sampleStops[3], "10:45"],  // Lucknow -> Jaipur
+  [sampleStops[8], sampleStops[10], "12:30"], // Lucknow -> Kanpur
+  [sampleStops[8], sampleStops[13], "14:00"], // Lucknow -> Ayodhya (Reverse of Delhi-Ayodhya via Lucknow if needed)
+
+  // Kanpur connections
+  [sampleStops[9], sampleStops[2], "07:00"],  // Kanpur -> Agra
+  [sampleStops[9], sampleStops[13], "09:30"], // Kanpur -> Ayodhya
+  [sampleStops[9], sampleStops[8], "11:30"],  // Kanpur -> Lucknow (Reverse)
+  [sampleStops[9], sampleStops[15], "13:15"], // Kanpur -> Prayagraj
+
+  // Varanasi connections
+  [sampleStops[10], sampleStops[13], "06:45"], // Varanasi -> Ayodhya
+  [sampleStops[10], sampleStops[2], "08:30"],  // Varanasi -> Agra
+  [sampleStops[10], sampleStops[8], "10:00"], // Varanasi -> Lucknow (Reverse)
+  [sampleStops[10], sampleStops[0], "14:30"], // Varanasi -> Delhi (Reverse)
+
+  // Agra connections
+  [sampleStops[2], sampleStops[13], "15:00"], // Agra -> Ayodhya
+  [sampleStops[2], sampleStops[8], "13:00"], // Agra -> Lucknow (Reverse)
+
+  // Jaipur connections
+  [sampleStops[3], sampleStops[8], "09:15"], // Jaipur -> Lucknow
+  [sampleStops[3], sampleStops[9], "11:45"], // Jaipur -> Kanpur
+  [sampleStops[3], sampleStops[10], "13:30"], // Jaipur -> Varanasi
+  [sampleStops[3], sampleStops[0], "16:00"], // Jaipur -> Delhi (Reverse)
+  
+  // Ayodhya connections
+  [sampleStops[13], sampleStops[12], "07:50"], // Ayodhya -> Sultanpur
+  [sampleStops[13], sampleStops[11], "09:20"], // Ayodhya -> Akbarpur
+  [sampleStops[13], sampleStops[14], "10:50"], // Ayodhya -> Barabanki
+
+  // Sultanpur, Akbarpur, Barabanki to Lucknow
+  [sampleStops[12], sampleStops[8], "14:10"], // Sultanpur -> Lucknow
+  [sampleStops[11], sampleStops[8], "15:40"], // Akbarpur -> Lucknow
+  [sampleStops[14], sampleStops[8], "17:00"], // Barabanki -> Lucknow
+];
+
+cityPairsToConnect.forEach(([originStop, destinationStop, departureTime]) => {
+  const distanceKm = calculateDistance(originStop.latitude, originStop.longitude, destinationStop.latitude, destinationStop.longitude);
+  const averageDurationHours = parseFloat((distanceKm / 45).toFixed(1)); // Approx 45km/hr avg speed
+
+  const routeId = `routeGen${routeCounter++}`;
+  newGeneratedRoutes.push({
+    id: routeId,
+    name: `Route ${originStop.name.split(" ")[0]} - ${destinationStop.name.split(" ")[0]}`,
+    operatorName: operatorNamesPool[routeCounter % operatorNamesPool.length],
+    busType: busTypesPool[routeCounter % busTypesPool.length],
+    stops: [originStop, destinationStop],
+    path: [
+      { lat: originStop.latitude, lng: originStop.longitude },
+      { lat: destinationStop.latitude, lng: destinationStop.longitude },
+    ],
+    departureTime: departureTime,
+    averageDurationHours: averageDurationHours,
+    distanceKm: distanceKm,
+  });
+
+  const busId = `busGen${busCounter++}`;
+  newGeneratedBuses.push({
+    id: busId,
+    routeId: routeId,
+    currentLatitude: originStop.latitude,
+    currentLongitude: originStop.longitude,
+    totalSeats: Math.floor(Math.random() * 26) + 30, // 30-55 seats
+    bookedSeats: Math.floor(Math.random() * 15),     // 0-14 booked seats
+    etaPredictions: new Map(),
+  });
+});
+
+
 export const sampleRoutes: Route[] = [
   {
     id: 'route1',
@@ -116,7 +220,7 @@ export const sampleRoutes: Route[] = [
     averageDurationHours: 4,
     distanceKm: 180,
   },
-  // New UP Routes
+  // Existing UP Routes
   {
     id: 'routeUP1',
     name: 'Route 501: Delhi - Lucknow Superfast',
@@ -193,7 +297,8 @@ export const sampleRoutes: Route[] = [
     departureTime: '21:30',
     averageDurationHours: 7.5,
     distanceKm: 500,
-  }
+  },
+  ...newGeneratedRoutes,
 ];
 
 export let sampleBuses: Bus[] = [ 
@@ -239,7 +344,7 @@ export let sampleBuses: Bus[] = [
     currentLatitude: 28.6000, currentLongitude: 77.2000, 
     totalSeats: 45, bookedSeats: 5, etaPredictions: new Map(),
   },
-  // New Buses for UP Routes
+  // Existing Buses for UP Routes
   {
     id: 'busUP32LK0011',
     routeId: 'routeUP1', // Delhi - Lucknow
@@ -269,5 +374,6 @@ export let sampleBuses: Bus[] = [
     routeId: 'routeUP5', // Delhi - Lucknow Volvo
     currentLatitude: 28.55, currentLongitude: 77.35, // Near Delhi/Noida
     totalSeats: 48, bookedSeats: 22, etaPredictions: new Map(),
-  }
+  },
+  ...newGeneratedBuses,
 ];
