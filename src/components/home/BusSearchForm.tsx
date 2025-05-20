@@ -20,7 +20,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-// Removed useToast as submission is handled by parent
+import { sampleStops } from "@/lib/data"; // Import sampleStops
 
 const searchSchema = z.object({
   from: z.string().min(1, "Source is required"),
@@ -93,7 +93,13 @@ export function BusSearchForm({ onSearch, isSearching }: BusSearchFormProps) {
                   className="pl-10"
                   {...register("from")}
                   disabled={isSearching}
+                  list="source-stations"
                 />
+                <datalist id="source-stations">
+                  {sampleStops.map(stop => (
+                    <option key={`from-${stop.id}`} value={stop.name} />
+                  ))}
+                </datalist>
               </div>
               {errors.from && <p className="text-xs text-red-500 mt-1">{errors.from.message}</p>}
             </div>
@@ -124,7 +130,13 @@ export function BusSearchForm({ onSearch, isSearching }: BusSearchFormProps) {
                   className="pl-10"
                   {...register("to")}
                   disabled={isSearching}
+                  list="destination-stations"
                 />
+                <datalist id="destination-stations">
+                  {sampleStops.map(stop => (
+                    <option key={`to-${stop.id}`} value={stop.name} />
+                  ))}
+                </datalist>
               </div>
               {errors.to && <p className="text-xs text-red-500 mt-1">{errors.to.message}</p>}
             </div>
@@ -205,3 +217,4 @@ export function BusSearchForm({ onSearch, isSearching }: BusSearchFormProps) {
     </Card>
   );
 }
+
