@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from 'lucide-react';
+import { cn } from "@/lib/utils"; // Added import
 
 interface PromoCardProps {
   title: string;
