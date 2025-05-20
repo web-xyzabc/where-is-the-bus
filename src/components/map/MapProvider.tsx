@@ -8,8 +8,9 @@ interface MapProviderProps {
 }
 
 export function MapProvider({ children }: MapProviderProps) {
+  
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
+  console.log(apiKey);
   if (!apiKey) {
     return (
       <div className="flex h-full min-h-[300px] w-full items-center justify-center rounded-lg border border-destructive bg-destructive/10 p-4 text-center text-destructive-foreground">
